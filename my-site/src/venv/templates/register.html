@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <style>
+        :root {
+            --bg-color: #1a0505;
+            --card-bg: rgba(45, 10, 10, 0.5);
+            --border-color: rgba(255, 50, 50, 0.2);
+            --primary-red: #ff3333;
+            --hover-red: #cc0000;
+            --text-main: #ffffff;
+            --text-muted: #ff9999;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #120202 0%, #290707 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative;
+        }
+
+        /* Круги */
+        .circles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
+        .circles li { position: absolute; display: block; list-style: none; background: rgba(255, 51, 51, 0.1); border: 1px solid rgba(255, 51, 51, 0.15); border-radius: 50%; bottom: -150px; animation: animate 25s linear infinite; }
+        .circles li:nth-child(1) { left: 15%; width: 60px; height: 60px; }
+        .circles li:nth-child(2) { left: 80%; width: 90px; height: 90px; animation-duration: 16s; }
+        @keyframes animate {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 35px;
+            width: 100%; max-width: 420px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            z-index: 2; box-sizing: border-box;
+        }
+
+        h2 { text-shadow: 0 0 10px rgba(255, 51, 51, 0.3); margin-top: 0; text-align: center;}
+        
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px;}
+        
+        label { color: var(--text-muted); font-size: 0.9rem; }
+        
+        input {
+            background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 11px; color: white; font-size: 1rem; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary-red); box-shadow: 0 0 8px rgba(255, 51, 51, 0.4); }
+        
+        button {
+            width: 100%; background: var(--primary-red); color: white; border: none;
+            border-radius: 8px; padding: 12px; font-size: 1rem; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px;
+        }
+        button:hover { background: var(--hover-red); box-shadow: 0 0 12px rgba(255, 51, 51, 0.6); }
+        
+        .link-container { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+        .link-container a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .link-container a:hover { color: var(--primary-red); }
+        
+        .flash-messages { color: #ff4d4d; list-style: none; padding: 0; margin-bottom: 20px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <ul class="circles"><li></li><li></li></ul>
+    <div class="card">
+        <h2>Регистрация</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label>Имя пользователя</label>
+                <input type="text" name="username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>Подтвердите пароль</label>
+                <input type="password" name="confirm-password" required>
+            </div>
+            <button type="submit">Создать аккаунт</button>
+        </form>
+
+        <div class="link-container">
+            <a href="{{ url_for('login') }}">Уже есть аккаунт? Войти</a>
+        </div>
+    </div>
+</body>
+</html>
